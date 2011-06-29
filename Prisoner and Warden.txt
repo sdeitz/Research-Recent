@@ -1,0 +1,57 @@
+
+
+The world consists of 4 places, the prison, and three safe houses, called sA, sB, and sC
+The three safehouses are in separate directions from the prison.
+
+The prisoner is attempting to escape to one of these safehouses, and the warden seeks to capture the prisoner
+The actions for the prisoner are mA1, mB1, mC1, mS1, standing for moving towards sA, sB, sC, and stay still at the prison 
+	and mA2, mB2, mC2, mS2, standing for the movement in the second phase, where the safehouse is reached
+The first action will be observed by the warden.
+The actions for the warden are to search any subset of (sA, sB, sC), 
+
+Specifically, it is commonly known that the warden's reward function is of the form
+	f1 + f2, where f1 is the reward for capturing or not capturing the prisoner, and f2 is the cost of deploying the search
+	f1 has 2 possible values, one for capture, and one for not capture
+	f2 has 8 possible vlues, 1 for each subset of (sA, sB, sC)
+and the prisoner's reward function is of the form
+	F1 + F2, where f1 is the reward for escaping or being captured, and f2 is the cost of getting to the hideout chosen
+	F1 has 2 possible values, one for capture and one for not capture
+	F2 has 16 possible values, 1 for ever element in (mA1, mB1, mC1, mS1) x (mA2, mB2, mC2, mS2)
+
+The exact rewards are not commonly known, but it is fair to impose the following restrictions
+	The warden prefers capturing the prisoner to not capturing the prisoner (f1(capture)>f1(not capture))
+	The prisoner prefers escaping to being captured (F1(capture)<F1(not capture))
+	f2 and F2 are both <0, as they are costs
+	F2(mA1, mA2)<=F2(*,mA2), F2(mB1, mB2)<=F2(*,mB2), F2(mC1, mC2)<=F2(*,mC2), F2(mS1,mS2)=0
+	
+	
+For simplicity, since we can linearly scale rewards, the minimum reward for each player will be -10, and the maximum will be 10
+Integer components to the functions or even overall rewards is too strong a condition to impose if you impose a range, but some sort of limitation like this would be nice.
+
+To avoid making the game trivial, we should avoid allowing -f2((sA, sB, sC)) < f1(capture) or -F2(*) > F1(not capture)
+
+So, these are the types which we should consider to be possible
+If we have just one type for each, commonly known, we can find the Nash Mixed Equilibrum
+If we have multiple types but all commmonly known, we have a Bayesian Nash Mixed Equilibrium
+If we have multiple types but the distribution is commonly known, what sort of a problem do we have?
+If we have multiple types and impose these restrictions on the type space, can we use an IPOMDP to solve?
+
+
+T
+	
+
+
+
+
+
+
+Special Cases
+Matching Pennies
+	f1(capture) = 1, f1(not capture) = 0, f2(*)=0
+	F1(capture) = 0, F1(not capture) = 1, F2(*)=1
+Reverse Battle of the Sexes - most reasonable
+	f1(capture)=2, f1(not capture) = 0, f2(sA) = 1, f2(sB) = 0
+	F1(capture)=0, F1(not capture) = 2, F2(sA) = 0, F2(sB) = 1
+Battle of the Sexes
+	f1(capture)=2, f1(not capture) = 0, f2(sA) = 1, f2(sB) = 0
+	F1(capture)=2, F1(not capture) = 0, F2(sA) = 0, F2(sB) = 1
